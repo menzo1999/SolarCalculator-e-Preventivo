@@ -1,0 +1,1 @@
+# SolarCalculator-e-Preventivo
