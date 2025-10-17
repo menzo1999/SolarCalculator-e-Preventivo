@@ -52,10 +52,85 @@ body {
     margin: 0 auto;
 }
 
-/* Sezioni */
+/* Indicatore di progresso */
+.progress-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+    gap: 15px;
+}
+
+.progress-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e5e5e5;
+    color: #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.progress-circle.active {
+    background: #0a5f5f;
+    color: white;
+    transform: scale(1.1);
+}
+
+.progress-circle.completed {
+    background: #0d7a7a;
+    color: white;
+}
+
+.progress-line {
+    width: 60px;
+    height: 3px;
+    background: #e5e5e5;
+    transition: all 0.3s ease;
+}
+
+.progress-line.completed {
+    background: #0d7a7a;
+}
+
+/* Sezioni/Pagine */
+.page {
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.page.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .section {
     padding: 50px 40px;
-    margin-bottom: 30px;
     background: #ffffff;
     border-radius: 16px;
     border: 1px solid #e5e5e5;
@@ -185,6 +260,12 @@ button:active {
     box-shadow: 0 2px 8px rgba(10, 95, 95, 0.3);
 }
 
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .btn-full {
     width: 100%;
     grid-column: span 2;
@@ -197,7 +278,29 @@ button:active {
 
 .btn-secondary {
     background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
-    margin-top: 15px;
+}
+
+/* Navigazione pagine */
+.page-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    gap: 15px;
+}
+
+.btn-nav {
+    flex: 1;
+    max-width: 200px;
+}
+
+.btn-back {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+}
+
+.btn-next {
+    background: linear-gradient(135deg, #0a5f5f 0%, #0d7a7a 100%);
+    margin-left: auto;
 }
 
 /* Risultati */
@@ -268,7 +371,6 @@ button:active {
         max-width: 100%;
     }
     
-    /* Header mobile */
     .main-header {
         margin-bottom: 30px;
         padding-bottom: 20px;
@@ -283,10 +385,23 @@ button:active {
         padding: 0 10px;
     }
     
-    /* Sezioni mobile */
+    .progress-indicator {
+        margin-bottom: 30px;
+        gap: 10px;
+    }
+    
+    .progress-circle {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+    
+    .progress-line {
+        width: 40px;
+    }
+    
     .section {
         padding: 25px 20px;
-        margin-bottom: 20px;
         border-radius: 12px;
     }
     
@@ -295,16 +410,11 @@ button:active {
         margin-bottom: 25px;
     }
     
-    .section-intro p:first-child {
-        font-size: 18px !important;
-    }
-    
     h2 {
         font-size: 22px;
         margin-bottom: 20px;
     }
     
-    /* Form mobile */
     .form-grid {
         grid-template-columns: 1fr;
         gap: 20px;
@@ -325,11 +435,6 @@ button:active {
         width: 100%;
     }
     
-    .help-link span {
-        font-size: 12px;
-    }
-    
-    /* Pulsanti mobile */
     button {
         padding: 18px 28px;
         font-size: 15px;
@@ -341,7 +446,19 @@ button:active {
         margin-top: 15px;
     }
     
-    /* Risultati mobile */
+    .page-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn-nav {
+        max-width: 100%;
+    }
+    
+    .btn-next {
+        margin-left: 0;
+    }
+    
     .result-container {
         padding: 20px 15px;
         margin-top: 20px;
@@ -366,36 +483,12 @@ button:active {
         padding: 20px 15px;
     }
     
-    .result-highlight .label {
-        font-size: 13px;
-    }
-    
     .result-highlight .value {
         font-size: 28px;
     }
 }
 
-/* Tablet landscape */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .container {
-        max-width: 90%;
-    }
-    
-    .section {
-        padding: 40px 30px;
-    }
-    
-    .form-grid {
-        gap: 20px;
-    }
-}
-
-/* Smartphone molto piccoli */
 @media (max-width: 380px) {
-    body {
-        padding: 15px 10px;
-    }
-    
     .logo-title {
         font-size: 24px;
     }
@@ -404,47 +497,15 @@ button:active {
         font-size: 14px;
     }
     
-    .section {
-        padding: 20px 15px;
+    .progress-circle {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
     }
     
-    h2 {
-        font-size: 20px;
+    .progress-line {
+        width: 30px;
     }
-    
-    input, select {
-        padding: 14px 12px;
-        font-size: 15px;
-    }
-    
-    button {
-        padding: 16px 24px;
-        font-size: 14px;
-    }
-    
-    .result-value {
-        font-size: 18px;
-    }
-    
-    .result-highlight .value {
-        font-size: 24px;
-    }
-}
-
-/* Animazioni */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.section {
-    animation: fadeIn 0.5s ease;
 }
 </style>
 </head>
@@ -458,146 +519,225 @@ button:active {
     <p class="subtitle">Strumento professionale per la stima del tuo impianto fotovoltaico. Calcola potenza, costi e risparmio energetico.</p>
 </div>
 
-<!-- SEZIONE 1 -->
-<div id="section1" class="section">
-    <div class="section-intro">
-        <p style="font-size: 20px; color: #333; margin-bottom: 30px;">
-            <strong>Inizia la tua valutazione energetica</strong>
-        </p>
-        <p>
-            Scopri la soluzione fotovoltaica ideale per la tua abitazione o azienda.<br>
-            Analisi dettagliata di potenza consigliata, investimento richiesto e periodo di ammortamento.
-        </p>
+<!-- INDICATORE DI PROGRESSO -->
+<div class="progress-indicator">
+    <div class="progress-step">
+        <div class="progress-circle active" id="progress-1">1</div>
     </div>
-    <button class="btn-primary btn-full" onclick="mostraSezione('section2')">
-        Inizia il Calcolo
-    </button>
+    <div class="progress-line" id="line-1"></div>
+    <div class="progress-step">
+        <div class="progress-circle" id="progress-2">2</div>
+    </div>
+    <div class="progress-line" id="line-2"></div>
+    <div class="progress-step">
+        <div class="progress-circle" id="progress-3">3</div>
+    </div>
 </div>
 
-<!-- SEZIONE 2 -->
-<div id="section2" class="section" style="display:none;">
-    <h2>Dati Tecnici</h2>
-    <form id="solarForm" class="form-grid">
-        <div class="form-field" style="grid-column: span 2;">
-            <label>Tipologia Cliente</label>
-            <select id="tipoCliente" required onchange="gestioneTipoCliente()">
-                <option value="privato">Privato</option>
-                <option value="azienda">Azienda</option>
-            </select>
+<!-- PAGINA 1: Introduzione -->
+<div id="page1" class="page active">
+    <div class="section">
+        <div class="section-intro">
+            <p style="font-size: 20px; color: #333; margin-bottom: 30px;">
+                <strong>Inizia la tua valutazione energetica</strong>
+            </p>
+            <p>
+                Scopri la soluzione fotovoltaica ideale per la tua abitazione o azienda.<br>
+                Analisi dettagliata di potenza consigliata, investimento richiesto e periodo di ammortamento.
+            </p>
         </div>
+        <div class="page-navigation">
+            <button class="btn-primary btn-nav btn-next" onclick="goToPage(2)">
+                Inizia il Calcolo →
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- PAGINA 2: Dati Tecnici -->
+<div id="page2" class="page">
+    <div class="section">
+        <h2>Dati Tecnici</h2>
+        <form id="solarForm" class="form-grid">
+            <div class="form-field" style="grid-column: span 2;">
+                <label>Tipologia Cliente</label>
+                <select id="tipoCliente" required onchange="gestioneTipoCliente()">
+                    <option value="privato">Privato</option>
+                    <option value="azienda">Azienda</option>
+                </select>
+            </div>
+            
+            <div id="opzioneCampoFotovoltaico" style="grid-column: span 2; display: none;">
+                <div class="help-link">
+                    <span onclick="toggleCampo()">
+                        Vuoi installare l'impianto in un campo fotovoltaico?
+                    </span>
+                </div>
+                <div id="opzioneCampo" style="display: none; margin-top: 10px;">
+                    <select id="installazioneCampo" onchange="gestioneCampo()" style="font-size: 14px; padding: 14px 16px; border: 2px solid #e5e5e5; border-radius: 8px; width: 100%; background: #fafafa;">
+                        <option value="no">No, installazione su tetto</option>
+                        <option value="si">Sì, installazione su campo fotovoltaico</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-field" style="grid-column: span 2;">
+                <label>Area Geografica</label>
+                <select id="area" required onchange="aggiornaRegioni()">
+                    <option value="">Seleziona area</option>
+                    <option value="nord">Nord Italia (1200 kWh/kW)</option>
+                    <option value="centro">Centro Italia (1300 kWh/kW)</option>
+                    <option value="sud">Sud Italia (1500 kWh/kW)</option>
+                    <option value="isole">Isole (1500 kWh/kW)</option>
+                </select>
+            </div>
+            
+            <div class="form-field" style="grid-column: span 2;">
+                <label>Regione</label>
+                <select id="regione" required>
+                    <option value="">Seleziona prima l'area geografica</option>
+                </select>
+            </div>
+            
+            <div class="form-field" style="grid-column: span 2;" id="campoTipoFornitura">
+                <label>Tipo di Fornitura</label>
+                <select id="tipoFornitura" required>
+                    <option value="monofase">Monofase (230V)</option>
+                    <option value="trifase">Trifase (400V)</option>
+                </select>
+            </div>
+            
+            <div class="form-field" id="campoConsumo">
+                <label>Consumo Annuo (kWh)</label>
+                <input type="number" id="consumo" placeholder="es. 3500">
+                <div class="help-link" onclick="toggleStima()">
+                    <span>Non conosci esattamente il tuo consumo? Fai una stima</span>
+                </div>
+                <div id="stimaConsumo" style="display: none; margin-top: 10px;">
+                    <select id="stimaSelect" onchange="applicaStima()" style="font-size: 14px;">
+                        <option value="">Seleziona in base alle persone</option>
+                        <option value="2300">1 persona (≈ 2.300 kWh/anno)</option>
+                        <option value="3400">2 persone (≈ 3.400 kWh/anno)</option>
+                        <option value="4100">3 persone (≈ 4.100 kWh/anno)</option>
+                        <option value="4600">4 persone (≈ 4.600 kWh/anno)</option>
+                        <option value="5300">5 persone (≈ 5.300 kWh/anno)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-field" id="campoSuperficie" style="display: none;">
+                <label>Superficie Campo Disponibile (m²)</label>
+                <input type="number" id="superficie" placeholder="es. 500">
+            </div>
+            
+            <div class="form-field" id="campoPiccoConsumo">
+                <label>Picco Consumo</label>
+                <select id="consumoPico">
+                    <option value="giorno">Prevalentemente diurno</option>
+                    <option value="notte">Prevalentemente serale/notturno</option>
+                </select>
+            </div>
+            
+            <div class="form-field" id="campoTipoTetto">
+                <label>Tipologia Tetto</label>
+                <select id="tipoTetto">
+                    <option value="inclinato">Inclinato</option>
+                    <option value="piatto">Piatto</option>
+                </select>
+            </div>
+            
+            <div class="form-field" id="campoEsposizione">
+                <label>Esposizione Tetto</label>
+                <select id="esposizione">
+                    <option value="sud">Sud (Ottimale)</option>
+                    <option value="est">Est</option>
+                    <option value="ovest">Ovest</option>
+                    <option value="nord">Nord</option>
+                </select>
+            </div>
+            
+            <div class="form-field" id="campoMaterialeTetto">
+                <label>Materiale Tetto</label>
+                <select id="materialeTetto">
+                    <option value="tegole">Tegole</option>
+                    <option value="lamiere">Lamiere metalliche</option>
+                    <option value="cemento">Cemento</option>
+                    <option value="altro">Altro</option>
+                </select>
+            </div>
+        </form>
         
-        <!-- Opzione Campo Fotovoltaico (solo per Aziende) -->
-        <div id="opzioneCampoFotovoltaico" style="grid-column: span 2; display: none;">
-            <div class="help-link">
-                <span style="font-size: 13px; color: #0a5f5f; cursor: pointer; text-decoration: underline;" onclick="toggleCampo()">
-                    Vuoi installare l'impianto in un campo fotovoltaico?
-                </span>
-            </div>
-            <div id="opzioneCampo" style="display: none; margin-top: 10px;">
-                <select id="installazioneCampo" onchange="gestioneCampo()" style="font-size: 14px; padding: 14px 16px; border: 2px solid #e5e5e5; border-radius: 8px; width: 100%; background: #fafafa;">
-                    <option value="no">No, installazione su tetto</option>
-                    <option value="si">Sì, installazione su campo fotovoltaico</option>
-                </select>
-            </div>
+        <div class="page-navigation">
+            <button class="btn-back btn-nav" onclick="goToPage(1)">
+                ← Indietro
+            </button>
+            <button class="btn-primary btn-nav btn-next" onclick="validateAndCalculate()">
+                Calcola Impianto →
+            </button>
         </div>
-        <div class="form-field" style="grid-column: span 2;">
-            <label>Area Geografica</label>
-            <select id="area" required onchange="aggiornaRegioni()">
-                <option value="">Seleziona area</option>
-                <option value="nord">Nord Italia (1200 kWh/kW)</option>
-                <option value="centro">Centro Italia (1300 kWh/kW)</option>
-                <option value="sud">Sud Italia (1500 kWh/kW)</option>
-                <option value="isole">Isole (1500 kWh/kW)</option>
-            </select>
-        </div>
-        <div class="form-field" style="grid-column: span 2;">
-            <label>Regione</label>
-            <select id="regione" required>
-                <option value="">Seleziona prima l'area geografica</option>
-            </select>
-        </div>
-        <div class="form-field" style="grid-column: span 2;" id="campoTipoFornitura">
-            <label>Tipo di Fornitura</label>
-            <select id="tipoFornitura" required>
-                <option value="monofase">Monofase (230V)</option>
-                <option value="trifase">Trifase (400V)</option>
-            </select>
-        </div>
-        <div class="form-field" id="campoConsumo">
-            <label>Consumo Annuo (kWh)</label>
-            <input type="number" id="consumo" placeholder="es. 3500">
-            <div class="help-link" onclick="toggleStima()">
-                <span style="font-size: 13px; color: #0a5f5f; cursor: pointer; text-decoration: underline;">
-                    Non conosci esattamente il tuo consumo? Fai una stima
-                </span>
-            </div>
-            <div id="stimaConsumo" style="display: none; margin-top: 10px;">
-                <select id="stimaSelect" onchange="applicaStima()" style="font-size: 14px;">
-                    <option value="">Seleziona in base alle persone</option>
-                    <option value="2300">1 persona (≈ 2.300 kWh/anno)</option>
-                    <option value="3400">2 persone (≈ 3.400 kWh/anno)</option>
-                    <option value="4100">3 persone (≈ 4.100 kWh/anno)</option>
-                    <option value="4600">4 persone (≈ 4.600 kWh/anno)</option>
-                    <option value="5300">5 persone (≈ 5.300 kWh/anno)</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-field" id="campoSuperficie" style="display: none;">
-            <label>Superficie Campo Disponibile (m²)</label>
-            <input type="number" id="superficie" placeholder="es. 500">
-        </div>
-        <div class="form-field" id="campoPiccoConsumo">
-            <label>Picco Consumo</label>
-            <select id="consumoPico">
-                <option value="giorno">Prevalentemente diurno</option>
-                <option value="notte">Prevalentemente serale/notturno</option>
-            </select>
-        </div>
-        <div class="form-field" id="campoTipoTetto">
-            <label>Tipologia Tetto</label>
-            <select id="tipoTetto">
-                <option value="inclinato">Inclinato</option>
-                <option value="piatto">Piatto</option>
-            </select>
-        </div>
-        <div class="form-field" id="campoEsposizione">
-            <label>Esposizione Tetto</label>
-            <select id="esposizione">
-                <option value="sud">Sud (Ottimale)</option>
-                <option value="est">Est</option>
-                <option value="ovest">Ovest</option>
-                <option value="nord">Nord</option>
-            </select>
-        </div>
-        <div class="form-field" id="campoMaterialeTetto">
-            <label>Materiale Tetto</label>
-            <select id="materialeTetto">
-                <option value="tegole">Tegole</option>
-                <option value="lamiere">Lamiere metalliche</option>
-                <option value="cemento">Cemento</option>
-                <option value="altro">Altro</option>
-            </select>
-        </div>
-        <button type="button" class="btn-primary btn-full" onclick="calcola()">
-            Calcola Impianto
-        </button>
-    </form>
+    </div>
 </div>
 
-<!-- SEZIONE 3 -->
-<div id="section3" class="section" style="display:none;">
-    <h2>Risultati Simulazione</h2>
-    <div id="result" class="result-container">
-        <div id="risultatoTesto"></div>
+<!-- PAGINA 3: Risultati -->
+<div id="page3" class="page">
+    <div class="section">
+        <h2>Risultati Simulazione</h2>
+        <div id="result" class="result-container">
+            <div id="risultatoTesto"></div>
+        </div>
+        <div class="page-navigation" style="margin-top: 30px;">
+            <button class="btn-back btn-nav" onclick="goToPage(2)">
+                ← Modifica Dati
+            </button>
+            <button class="btn-primary btn-nav btn-next" onclick="scaricaPreventivo()">
+                Scarica PDF →
+            </button>
+        </div>
     </div>
-    <button class="btn-primary btn-full" onclick="scaricaPreventivo()">
-        Scarica Preventivo PDF
-    </button>
 </div>
 
 </div>
 
 <script>
+// Variabile per tracciare la pagina corrente
+let currentPage = 1;
+
+// Funzione per navigare tra le pagine
+function goToPage(pageNumber) {
+    // Nascondi pagina corrente
+    document.getElementById('page' + currentPage).classList.remove('active');
+    
+    // Mostra nuova pagina
+    currentPage = pageNumber;
+    document.getElementById('page' + currentPage).classList.add('active');
+    
+    // Aggiorna indicatore di progresso
+    updateProgress();
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Funzione per aggiornare l'indicatore di progresso
+function updateProgress() {
+    for (let i = 1; i <= 3; i++) {
+        const circle = document.getElementById('progress-' + i);
+        const line = document.getElementById('line-' + i);
+        
+        if (i < currentPage) {
+            circle.classList.add('completed');
+            circle.classList.remove('active');
+            if (line) line.classList.add('completed');
+        } else if (i === currentPage) {
+            circle.classList.add('active');
+            circle.classList.remove('completed');
+        } else {
+            circle.classList.remove('active', 'completed');
+            if (line) line.classList.remove('completed');
+        }
+    }
+}
+
 // Definizione regioni per area
 const regioniPerArea = {
     nord: [
@@ -670,23 +810,9 @@ function aggiornaRegioni() {
     }
 }
 
-function mostraSezione(id) {
-    document.getElementById(id).style.display = 'block';
-    document.getElementById(id).scrollIntoView({behavior: "smooth"});
-    
-    // Comunica al sito parent (Wix) di espandere l'iframe
-    if (window.parent) {
-        window.parent.postMessage("expand", "*");
-    }
-}
-
 function toggleStima() {
     const stimaDiv = document.getElementById('stimaConsumo');
-    if (stimaDiv.style.display === 'none') {
-        stimaDiv.style.display = 'block';
-    } else {
-        stimaDiv.style.display = 'none';
-    }
+    stimaDiv.style.display = stimaDiv.style.display === 'none' ? 'block' : 'none';
 }
 
 function gestioneTipoCliente() {
@@ -696,32 +822,25 @@ function gestioneTipoCliente() {
     const opzioneCampoFotovoltaico = document.getElementById('opzioneCampoFotovoltaico');
     
     if (tipoCliente === 'azienda') {
-        // AZIENDA: nascondi stima consumo, mostra opzione campo
         if (helpLinkStima) helpLinkStima.style.display = 'none';
         if (stimaDiv) stimaDiv.style.display = 'none';
         if (opzioneCampoFotovoltaico) opzioneCampoFotovoltaico.style.display = 'block';
     } else {
-        // PRIVATO: mostra stima consumo, nascondi opzione campo
         if (helpLinkStima) helpLinkStima.style.display = 'block';
         if (opzioneCampoFotovoltaico) opzioneCampoFotovoltaico.style.display = 'none';
-        // Reset campo fotovoltaico se era selezionato
         const opzioneCampo = document.getElementById('opzioneCampo');
         const installazioneCampo = document.getElementById('installazioneCampo');
         if (opzioneCampo) opzioneCampo.style.display = 'none';
         if (installazioneCampo) {
             installazioneCampo.value = 'no';
-            gestioneCampo(); // Resetta la visualizzazione
+            gestioneCampo();
         }
     }
 }
 
 function toggleCampo() {
     const campoDiv = document.getElementById('opzioneCampo');
-    if (campoDiv.style.display === 'none') {
-        campoDiv.style.display = 'block';
-    } else {
-        campoDiv.style.display = 'none';
-    }
+    campoDiv.style.display = campoDiv.style.display === 'none' ? 'block' : 'none';
 }
 
 function gestioneCampo() {
@@ -734,45 +853,30 @@ function gestioneCampo() {
     const tipoFornituraSelect = document.getElementById('tipoFornitura');
     
     if (installazioneCampo === 'si') {
-        // CAMPO FOTOVOLTAICO
-        // Nascondi i campi relativi al tetto e al consumo
         campiTetto.forEach(campo => {
             document.getElementById(campo).style.display = 'none';
         });
         campiConsumo.forEach(campo => {
             document.getElementById(campo).style.display = 'none';
         });
-        // Nascondi tipo fornitura e imposta automaticamente trifase
-        if (campoTipoFornitura) {
-            campoTipoFornitura.style.display = 'none';
-        }
-        if (tipoFornituraSelect) {
-            tipoFornituraSelect.value = 'trifase'; // Imposta automaticamente trifase
-        }
-        // Mostra campo superficie per campo fotovoltaico
+        if (campoTipoFornitura) campoTipoFornitura.style.display = 'none';
+        if (tipoFornituraSelect) tipoFornituraSelect.value = 'trifase';
         campoSuperficie.style.display = 'flex';
         inputSuperficie.setAttribute('required', 'required');
-        // Imposta valori ottimali per il campo
         document.getElementById('tipoTetto').value = 'inclinato';
         document.getElementById('esposizione').value = 'sud';
         document.getElementById('consumo').removeAttribute('required');
     } else {
-        // INSTALLAZIONE SU TETTO
-        // Mostra tutti i campi del tetto
         campiTetto.forEach(campo => {
             document.getElementById(campo).style.display = 'flex';
         });
         campiConsumo.forEach(campo => {
             document.getElementById(campo).style.display = 'flex';
         });
-        // Mostra tipo fornitura
-        if (campoTipoFornitura) {
-            campoTipoFornitura.style.display = 'flex';
-        }
-        // Nascondi campo superficie per tetto
+        if (campoTipoFornitura) campoTipoFornitura.style.display = 'flex';
         campoSuperficie.style.display = 'none';
         inputSuperficie.removeAttribute('required');
-        inputSuperficie.value = ''; // Pulisci il valore
+        inputSuperficie.value = '';
         document.getElementById('consumo').setAttribute('required', 'required');
     }
 }
@@ -784,9 +888,34 @@ function applicaStima() {
     }
 }
 
-function calcola() {
-    mostraSezione('section3');
+function validateAndCalculate() {
+    const area = document.getElementById('area').value;
+    const regione = document.getElementById('regione').value;
+    const installazioneCampoElement = document.getElementById('installazioneCampo');
+    const installazioneCampo = installazioneCampoElement ? installazioneCampoElement.value : 'no';
+    const consumo = document.getElementById('consumo').value;
+    const superficie = document.getElementById('superficie').value;
+    
+    if (!area || !regione) {
+        alert('Seleziona area geografica e regione');
+        return;
+    }
+    
+    if (installazioneCampo === 'si' && !superficie) {
+        alert('Inserisci la superficie del campo disponibile');
+        return;
+    }
+    
+    if (installazioneCampo === 'no' && !consumo) {
+        alert('Inserisci il consumo annuo');
+        return;
+    }
+    
+    calcola();
+    goToPage(3);
+}
 
+function calcola() {
     const area = document.getElementById("area").value;
     const regione = document.getElementById("regione").value;
     const tipoFornitura = document.getElementById("tipoFornitura").value;
@@ -825,16 +954,14 @@ function calcola() {
     let isCampoVendita = installazioneCampo === "si" || !consumo;
 
     if (isCampoVendita) {
-        // Calcolo basato solo sulla superficie per vendita energia (CAMPO)
         const superficieInput = document.getElementById("superficie").value;
         const superficie = superficieInput ? parseFloat(superficieInput) : 0;
-        kWInstallabili = superficie / m2PerKWCampo; // 5 m² per kW
+        kWInstallabili = superficie / m2PerKWCampo;
         produzioneAnnua = kWInstallabili * kWhPerKW;
-        numBatterie = 0; // Nessuna batteria per vendita energia
+        numBatterie = 0;
     } else {
-        // Calcolo normale con consumo (TETTO - senza limite superficie)
         let kWRichiesti = consumo / kWhPerKW;
-        kWInstallabili = kWRichiesti; // Nessun limite di superficie per tetto
+        kWInstallabili = kWRichiesti;
         produzioneAnnua = kWInstallabili * kWhPerKW;
         
         let consumoGiornaliero = consumo / 365;
@@ -848,7 +975,6 @@ function calcola() {
     let costoBatterie = numBatterie * costoBatteria;
     let costoBase = costoPannelli + costoBatterie;
     
-    // Calcolo surplus trasferta
     let percentualeSurplus = surplusTrasferta[regione] || 0;
     let costoTrasferta = costoBase * (percentualeSurplus / 100);
     let costoTotale = costoBase + costoTrasferta;
@@ -992,7 +1118,6 @@ function scaricaPreventivo() {
     let superficie = 0;
 
     if (isCampoVendita) {
-        // Calcolo basato solo sulla superficie per vendita energia (CAMPO)
         const superficieInput = document.getElementById("superficie").value;
         superficie = superficieInput ? parseFloat(superficieInput) : 0;
         
@@ -1001,20 +1126,19 @@ function scaricaPreventivo() {
             return;
         }
         
-        kWInstallabili = superficie / m2PerKWCampo; // 5 m² per kW
+        kWInstallabili = superficie / m2PerKWCampo;
         produzioneAnnua = kWInstallabili * kWhPerKW;
         numBatterie = 0;
     } else {
-        // Calcolo normale con consumo (TETTO)
         if (!consumo || consumo === 0) {
             alert("Per l'installazione su tetto è necessario inserire il consumo annuo.");
             return;
         }
         
         let kWRichiesti = consumo / kWhPerKW;
-        kWInstallabili = kWRichiesti; // Nessun limite di superficie per tetto
+        kWInstallabili = kWRichiesti;
         produzioneAnnua = kWInstallabili * kWhPerKW;
-        superficie = kWInstallabili * m2PerKWTetto; // Calcola superficie necessaria
+        superficie = kWInstallabili * m2PerKWTetto;
         
         let consumoGiornaliero = consumo / 365;
         let shareNight = consumoPico === "notte" ? 0.7 : 0.3;
@@ -1027,7 +1151,6 @@ function scaricaPreventivo() {
     let costoBatterie = numBatterie * costoBatteria;
     let costoBase = costoPannelli + costoBatterie;
     
-    // Calcolo surplus trasferta
     let percentualeSurplus = surplusTrasferta[regione] || 0;
     let costoTrasferta = costoBase * (percentualeSurplus / 100);
     let costoTotale = costoBase + costoTrasferta;
@@ -1037,15 +1160,12 @@ function scaricaPreventivo() {
 
     let numPannelli = Math.ceil(kWInstallabili / potenzaPannello);
 
-    // Selezione inverter in base a potenza, tipo fornitura e presenza batterie
     let inverter = "";
     let tipoInverter = "";
     let specificheTecniche = {};
     
     if (numBatterie > 0) {
-        // Con accumulo: Inverter Ibrido
         if (tipoFornitura === "monofase") {
-            // Inverter Monofase con Accumulo
             tipoInverter = "Ibrido Monofase con Accumulo";
             if (kWInstallabili <= 4.5) {
                 inverter = "HYD 3000-ZSS";
@@ -1081,7 +1201,6 @@ function scaricaPreventivo() {
                 };
             }
         } else {
-            // Inverter Trifase con Accumulo
             tipoInverter = "Ibrido Trifase con Accumulo";
             if (kWInstallabili <= 6.5) {
                 inverter = "HYD 5000 ZSS";
@@ -1110,9 +1229,7 @@ function scaricaPreventivo() {
             };
         }
     } else {
-        // Senza accumulo
         if (tipoFornitura === "monofase" && kWInstallabili <= 6) {
-            // Inverter Monofase (1-6 kW)
             tipoInverter = "Monofase";
             if (kWInstallabili <= 2.2) {
                 inverter = "TL-V3 1,1 kW";
@@ -1141,7 +1258,6 @@ function scaricaPreventivo() {
                 rumorosita: "< 25 dB"
             };
         } else {
-            // Inverter Trifase (3,3-350 kW)
             tipoInverter = "Trifase";
             if (kWInstallabili <= 7.5) {
                 inverter = "3PH 3.3KTL-V1";
@@ -1198,7 +1314,6 @@ function scaricaPreventivo() {
         }
     }
 
-    // Definisci isCampoVendita per uso nel template
     let isCampoVenditaPDF = isCampoVendita;
 
     const areaLabel = area === "nord" ? "Nord Italia" : area === "centro" ? "Centro Italia" : area === "sud" ? "Sud Italia" : "Isole";
@@ -1208,7 +1323,6 @@ function scaricaPreventivo() {
     const tipoInstallazione = installazioneCampo === "si" ? "Campo" : "Tetto";
     const dataOggi = new Date().toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-    // Sezione pagamenti specifica per tipo cliente
     let sezionePagamenti = '';
     if (tipoCliente === "privato") {
         sezionePagamenti = `
@@ -1264,9 +1378,6 @@ function scaricaPreventivo() {
     </div>
         `;
     }
-
-    // Tabella costi - surplus incluso nel totale ma non mostrato
-    let tabellaTrasferta = '';
 
     const preventivoHTML = `
 <!DOCTYPE html>
