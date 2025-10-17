@@ -485,6 +485,21 @@ button:active {
                 <option value="azienda">Azienda</option>
             </select>
         </div>
+        
+        <!-- Opzione Campo Fotovoltaico (solo per Aziende) -->
+        <div id="opzioneCampoFotovoltaico" style="grid-column: span 2; display: none;">
+            <div class="help-link">
+                <span style="font-size: 13px; color: #0a5f5f; cursor: pointer; text-decoration: underline;" onclick="toggleCampo()">
+                    Vuoi installare l'impianto in un campo fotovoltaico?
+                </span>
+            </div>
+            <div id="opzioneCampo" style="display: none; margin-top: 10px;">
+                <select id="installazioneCampo" onchange="gestioneCampo()" style="font-size: 14px; padding: 14px 16px; border: 2px solid #e5e5e5; border-radius: 8px; width: 100%; background: #fafafa;">
+                    <option value="no">No, installazione su tetto</option>
+                    <option value="si">Sì, installazione su campo fotovoltaico</option>
+                </select>
+            </div>
+        </div>
         <div class="form-field" style="grid-column: span 2;">
             <label>Area Geografica</label>
             <select id="area" required onchange="aggiornaRegioni()">
@@ -501,7 +516,7 @@ button:active {
                 <option value="">Seleziona prima l'area geografica</option>
             </select>
         </div>
-        <div class="form-field" style="grid-column: span 2;">
+        <div class="form-field" style="grid-column: span 2;" id="campoTipoFornitura">
             <label>Tipo di Fornitura</label>
             <select id="tipoFornitura" required>
                 <option value="monofase">Monofase (230V)</option>
@@ -527,20 +542,9 @@ button:active {
                 </select>
             </div>
         </div>
-        <div class="form-field">
-            <label>Superficie Disponibile (m²)</label>
-            <input type="number" id="superficie" placeholder="es. 50" required>
-            <div class="help-link" onclick="toggleCampo()">
-                <span style="font-size: 13px; color: #0a5f5f; cursor: pointer; text-decoration: underline;">
-                    Vuoi installare l'impianto in un campo?
-                </span>
-            </div>
-            <div id="opzioneCampo" style="display: none; margin-top: 10px;">
-                <select id="installazioneCampo" onchange="gestioneCampo()" style="font-size: 14px;">
-                    <option value="no">No, installazione su tetto</option>
-                    <option value="si">Sì, installazione su campo</option>
-                </select>
-            </div>
+        <div class="form-field" id="campoSuperficie" style="display: none;">
+            <label>Superficie Campo Disponibile (m²)</label>
+            <input type="number" id="superficie" placeholder="es. 500">
         </div>
         <div class="form-field" id="campoPiccoConsumo">
             <label>Picco Consumo</label>
@@ -669,6 +673,11 @@ function aggiornaRegioni() {
 function mostraSezione(id) {
     document.getElementById(id).style.display = 'block';
     document.getElementById(id).scrollIntoView({behavior: "smooth"});
+    
+    // Comunica al sito parent (Wix) di espandere l'iframe
+    if (window.parent) {
+        window.parent.postMessage("expand", "*");
+    }
 }
 
 function toggleStima() {
@@ -684,14 +693,25 @@ function gestioneTipoCliente() {
     const tipoCliente = document.getElementById('tipoCliente').value;
     const helpLinkStima = document.querySelector('#campoConsumo .help-link');
     const stimaDiv = document.getElementById('stimaConsumo');
+    const opzioneCampoFotovoltaico = document.getElementById('opzioneCampoFotovoltaico');
     
     if (tipoCliente === 'azienda') {
-        // Nascondi il link di stima e il menu per le aziende
+        // AZIENDA: nascondi stima consumo, mostra opzione campo
         if (helpLinkStima) helpLinkStima.style.display = 'none';
         if (stimaDiv) stimaDiv.style.display = 'none';
+        if (opzioneCampoFotovoltaico) opzioneCampoFotovoltaico.style.display = 'block';
     } else {
-        // Mostra il link di stima per i privati
+        // PRIVATO: mostra stima consumo, nascondi opzione campo
         if (helpLinkStima) helpLinkStima.style.display = 'block';
+        if (opzioneCampoFotovoltaico) opzioneCampoFotovoltaico.style.display = 'none';
+        // Reset campo fotovoltaico se era selezionato
+        const opzioneCampo = document.getElementById('opzioneCampo');
+        const installazioneCampo = document.getElementById('installazioneCampo');
+        if (opzioneCampo) opzioneCampo.style.display = 'none';
+        if (installazioneCampo) {
+            installazioneCampo.value = 'no';
+            gestioneCampo(); // Resetta la visualizzazione
+        }
     }
 }
 
@@ -708,8 +728,13 @@ function gestioneCampo() {
     const installazioneCampo = document.getElementById('installazioneCampo').value;
     const campiTetto = ['campoTipoTetto', 'campoEsposizione', 'campoMaterialeTetto'];
     const campiConsumo = ['campoConsumo', 'campoPiccoConsumo'];
+    const campoSuperficie = document.getElementById('campoSuperficie');
+    const inputSuperficie = document.getElementById('superficie');
+    const campoTipoFornitura = document.getElementById('campoTipoFornitura');
+    const tipoFornituraSelect = document.getElementById('tipoFornitura');
     
     if (installazioneCampo === 'si') {
+        // CAMPO FOTOVOLTAICO
         // Nascondi i campi relativi al tetto e al consumo
         campiTetto.forEach(campo => {
             document.getElementById(campo).style.display = 'none';
@@ -717,18 +742,37 @@ function gestioneCampo() {
         campiConsumo.forEach(campo => {
             document.getElementById(campo).style.display = 'none';
         });
+        // Nascondi tipo fornitura e imposta automaticamente trifase
+        if (campoTipoFornitura) {
+            campoTipoFornitura.style.display = 'none';
+        }
+        if (tipoFornituraSelect) {
+            tipoFornituraSelect.value = 'trifase'; // Imposta automaticamente trifase
+        }
+        // Mostra campo superficie per campo fotovoltaico
+        campoSuperficie.style.display = 'flex';
+        inputSuperficie.setAttribute('required', 'required');
         // Imposta valori ottimali per il campo
         document.getElementById('tipoTetto').value = 'inclinato';
         document.getElementById('esposizione').value = 'sud';
         document.getElementById('consumo').removeAttribute('required');
     } else {
-        // Mostra tutti i campi
+        // INSTALLAZIONE SU TETTO
+        // Mostra tutti i campi del tetto
         campiTetto.forEach(campo => {
             document.getElementById(campo).style.display = 'flex';
         });
         campiConsumo.forEach(campo => {
             document.getElementById(campo).style.display = 'flex';
         });
+        // Mostra tipo fornitura
+        if (campoTipoFornitura) {
+            campoTipoFornitura.style.display = 'flex';
+        }
+        // Nascondi campo superficie per tetto
+        campoSuperficie.style.display = 'none';
+        inputSuperficie.removeAttribute('required');
+        inputSuperficie.value = ''; // Pulisci il valore
         document.getElementById('consumo').setAttribute('required', 'required');
     }
 }
@@ -748,9 +792,9 @@ function calcola() {
     const tipoFornitura = document.getElementById("tipoFornitura").value;
     const consumoInput = document.getElementById("consumo").value;
     const consumo = consumoInput ? parseFloat(consumoInput) : null;
-    const superficie = parseFloat(document.getElementById("superficie").value);
     const consumoPico = document.getElementById("consumoPico").value;
-    const installazioneCampo = document.getElementById("installazioneCampo").value;
+    const installazioneCampoElement = document.getElementById("installazioneCampo");
+    const installazioneCampo = installazioneCampoElement ? installazioneCampoElement.value : "no";
     const tipoTetto = document.getElementById("tipoTetto").value;
     const esposizione = document.getElementById("esposizione").value;
 
@@ -771,7 +815,8 @@ function calcola() {
 
     kWhPerKW = kWhPerKW * fattoreEsposizione;
 
-    const m2PerKW = 7;
+    const m2PerKWTetto = 7;
+    const m2PerKWCampo = 5;
     const costoKW = 1500;
     const costoBatteria = 3000;
     const prezzoEnergia = 0.25;
@@ -780,15 +825,16 @@ function calcola() {
     let isCampoVendita = installazioneCampo === "si" || !consumo;
 
     if (isCampoVendita) {
-        // Calcolo basato solo sulla superficie per vendita energia
-        kWInstallabili = superficie / m2PerKW;
+        // Calcolo basato solo sulla superficie per vendita energia (CAMPO)
+        const superficieInput = document.getElementById("superficie").value;
+        const superficie = superficieInput ? parseFloat(superficieInput) : 0;
+        kWInstallabili = superficie / m2PerKWCampo; // 5 m² per kW
         produzioneAnnua = kWInstallabili * kWhPerKW;
         numBatterie = 0; // Nessuna batteria per vendita energia
     } else {
-        // Calcolo normale con consumo
+        // Calcolo normale con consumo (TETTO - senza limite superficie)
         let kWRichiesti = consumo / kWhPerKW;
-        let kWMassimi = superficie / m2PerKW;
-        kWInstallabili = Math.min(kWRichiesti, kWMassimi);
+        kWInstallabili = kWRichiesti; // Nessun limite di superficie per tetto
         produzioneAnnua = kWInstallabili * kWhPerKW;
         
         let consumoGiornaliero = consumo / 365;
@@ -814,7 +860,9 @@ function calcola() {
     const esposizioneLabel = esposizione.charAt(0).toUpperCase() + esposizione.slice(1);
     const tipoTettoLabel = tipoTetto === "inclinato" ? "Inclinato" : "Piatto";
     const efficienzaPerc = (fattoreEsposizione * 100).toFixed(0);
-    const tipoInstallazione = installazioneCampo === "si" ? "Campo (Vendita Energia)" : "Tetto";
+    const tipoInstallazione = installazioneCampo === "si" ? "Campo Fotovoltaico (Vendita Energia)" : "Tetto";
+    const superficieInput = document.getElementById("superficie").value;
+    const superficieDisplay = superficieInput ? parseFloat(superficieInput) : 0;
 
     let risultatoHTML = `
         <div class="result-row">
@@ -829,6 +877,14 @@ function calcola() {
             <span class="result-label">Regione</span>
             <span class="result-value">${regione}</span>
         </div>`;
+    
+    if (installazioneCampo === "si") {
+        risultatoHTML += `
+        <div class="result-row">
+            <span class="result-label">Superficie Campo</span>
+            <span class="result-value">${superficieDisplay} m²</span>
+        </div>`;
+    }
     
     if (installazioneCampo === "no" && consumo) {
         risultatoHTML += `
@@ -886,7 +942,7 @@ function calcola() {
             <span class="result-value">€ ${ricavoAnnuale.toLocaleString('it-IT', {minimumFractionDigits: 2})}</span>
         </div>
         <div class="result-highlight">
-            <div class="label">Rientro con l'Investimento</div>
+            <div class="label">Rientro Investimento</div>
             <div class="value">${ammortamento.toFixed(1)} anni</div>
         </div>
     `;
@@ -901,9 +957,9 @@ function scaricaPreventivo() {
     const tipoFornitura = document.getElementById("tipoFornitura").value;
     const consumoInput = document.getElementById("consumo").value;
     const consumo = consumoInput ? parseFloat(consumoInput) : null;
-    const superficie = parseFloat(document.getElementById("superficie").value);
     const consumoPico = document.getElementById("consumoPico").value;
-    const installazioneCampo = document.getElementById("installazioneCampo").value;
+    const installazioneCampoElement = document.getElementById("installazioneCampo");
+    const installazioneCampo = installazioneCampoElement ? installazioneCampoElement.value : "no";
     const tipoTetto = document.getElementById("tipoTetto").value;
     const esposizione = document.getElementById("esposizione").value;
     const materialeTetto = document.getElementById("materialeTetto").value;
@@ -924,26 +980,41 @@ function scaricaPreventivo() {
 
     kWhPerKW = kWhPerKW * fattoreEsposizione;
 
-    const m2PerKW = 7;
+    const m2PerKWTetto = 7;
+    const m2PerKWCampo = 5;
     const costoKW = 1500;
     const costoBatteria = 3000;
     const prezzoEnergia = 0.25;
     const potenzaPannello = 0.45;
 
     let kWInstallabili, produzioneAnnua, numBatterie = 0;
-    let isCampoVendita = installazioneCampo === "si" || !consumo;
+    let isCampoVendita = installazioneCampo === "si";
+    let superficie = 0;
 
     if (isCampoVendita) {
-        // Calcolo basato solo sulla superficie per vendita energia
-        kWInstallabili = superficie / m2PerKW;
+        // Calcolo basato solo sulla superficie per vendita energia (CAMPO)
+        const superficieInput = document.getElementById("superficie").value;
+        superficie = superficieInput ? parseFloat(superficieInput) : 0;
+        
+        if (superficie === 0) {
+            alert("Per l'installazione su campo fotovoltaico è necessario inserire la superficie disponibile.");
+            return;
+        }
+        
+        kWInstallabili = superficie / m2PerKWCampo; // 5 m² per kW
         produzioneAnnua = kWInstallabili * kWhPerKW;
         numBatterie = 0;
     } else {
-        // Calcolo normale con consumo
+        // Calcolo normale con consumo (TETTO)
+        if (!consumo || consumo === 0) {
+            alert("Per l'installazione su tetto è necessario inserire il consumo annuo.");
+            return;
+        }
+        
         let kWRichiesti = consumo / kWhPerKW;
-        let kWMassimi = superficie / m2PerKW;
-        kWInstallabili = Math.min(kWRichiesti, kWMassimi);
+        kWInstallabili = kWRichiesti; // Nessun limite di superficie per tetto
         produzioneAnnua = kWInstallabili * kWhPerKW;
+        superficie = kWInstallabili * m2PerKWTetto; // Calcola superficie necessaria
         
         let consumoGiornaliero = consumo / 365;
         let shareNight = consumoPico === "notte" ? 0.7 : 0.3;
@@ -1194,15 +1265,8 @@ function scaricaPreventivo() {
         `;
     }
 
-    // Tabella costi con surplus
+    // Tabella costi - surplus incluso nel totale ma non mostrato
     let tabellaTrasferta = '';
-    if (percentualeSurplus > 0) {
-        tabellaTrasferta = `
-        <tr>
-            <td>Surplus Trasferta (${percentualeSurplus}%)</td>
-            <td>€ ${costoTrasferta.toLocaleString('it-IT', {minimumFractionDigits: 2})}</td>
-        </tr>`;
-    }
 
     const preventivoHTML = `
 <!DOCTYPE html>
@@ -1348,16 +1412,29 @@ function scaricaPreventivo() {
             <td>Regione</td>
             <td>${regione}</td>
         </tr>
+        ${installazioneCampo === "si" ? `
+        <tr>
+            <td>Tipo di Fornitura</td>
+            <td>Trifase (400V) - Standard per impianti campo</td>
+        </tr>
+        ` : `
+        <tr>
+            <td>Tipo di Fornitura</td>
+            <td>${tipoFornitura === "monofase" ? "Monofase (230V)" : "Trifase (400V)"}</td>
+        </tr>
+        `}
         ${consumo ? `
         <tr>
             <td>Consumo Annuo Stimato</td>
             <td>${consumo.toLocaleString('it-IT')} kWh/anno</td>
         </tr>
         ` : ''}
+        ${installazioneCampo === "si" ? `
         <tr>
-            <td>Superficie Disponibile</td>
+            <td>Superficie Campo Disponibile</td>
             <td>${superficie} m²</td>
         </tr>
+        ` : ''}
         ${installazioneCampo === "no" ? `
         <tr>
             <td>Tipologia Tetto</td>
@@ -1413,32 +1490,8 @@ function scaricaPreventivo() {
             <td>Celle N-type i-TOPCon</td>
         </tr>
         <tr>
-            <td>Configurazione</td>
-            <td>144 Celle Perc®</td>
-        </tr>
-        <tr>
             <td>Potenza Modulo</td>
             <td>450 W</td>
-        </tr>
-        <tr>
-            <td>Tensione MPP (Vmpp)</td>
-            <td>44,60 Vdc</td>
-        </tr>
-        <tr>
-            <td>Tensione Circuito Aperto (Voc)</td>
-            <td>52,90 Vdc</td>
-        </tr>
-        <tr>
-            <td>Corrente MPP (Impp)</td>
-            <td>10,09 A</td>
-        </tr>
-        <tr>
-            <td>Corrente Cortocircuito (Isc)</td>
-            <td>10,74 A</td>
-        </tr>
-        <tr>
-            <td>NOCT</td>
-            <td>43 ± 2 °C</td>
         </tr>
         <tr>
             <td>Dimensioni</td>
@@ -1475,24 +1528,8 @@ function scaricaPreventivo() {
             <td>${specificheTecniche.funzione}</td>
         </tr>
         <tr>
-            <td>Efficienza massima</td>
-            <td>${specificheTecniche.efficienza}</td>
-        </tr>
-        <tr>
-            <td>Tensione MPPT</td>
-            <td>${specificheTecniche.tensioneMPPT}</td>
-        </tr>
-        <tr>
-            <td>Numero di MPPT</td>
-            <td>${specificheTecniche.mppt}</td>
-        </tr>
-        <tr>
             <td>Tensione di rete</td>
             <td>${specificheTecniche.tensione}</td>
-        </tr>
-        <tr>
-            <td>Protezione</td>
-            <td>${specificheTecniche.protezione}</td>
         </tr>
         <tr>
             <td>Comunicazione</td>
@@ -1501,10 +1538,6 @@ function scaricaPreventivo() {
         <tr>
             <td>Grado di protezione</td>
             <td>${specificheTecniche.grado} - Adatto per installazione interna o esterna</td>
-        </tr>
-        <tr>
-            <td>Rumorosità</td>
-            <td>${specificheTecniche.rumorosita}</td>
         </tr>
     </table>
 
@@ -1548,9 +1581,8 @@ function scaricaPreventivo() {
             <td>€ ${costoBatterie.toLocaleString('it-IT', {minimumFractionDigits: 2})}</td>
         </tr>
         ` : ''}
-        ${tabellaTrasferta}
         <tr style="background: #f5f5f5; font-weight: 700;">
-            <td>INVESTIMENTO TOTALE</td>
+            <td>INVESTIMENTO TOTALE (chiavi in mano)</td>
             <td>€ ${costoTotale.toLocaleString('it-IT', {minimumFractionDigits: 2})}</td>
         </tr>
         <tr>
@@ -1558,7 +1590,7 @@ function scaricaPreventivo() {
             <td>€ ${ricavoAnnuale.toLocaleString('it-IT', {minimumFractionDigits: 2})}</td>
         </tr>
         <tr style="background: #f8fffe; font-weight: 700; color: #0a5f5f;">
-            <td>RIENTRO CON L'INVESTIMENTO</td>
+            <td>RIENTRO INVESTIMENTO</td>
             <td>${ammortamento.toFixed(1)} anni</td>
         </tr>
     </table>
@@ -1569,8 +1601,8 @@ function scaricaPreventivo() {
         <strong>NOTE IMPORTANTI:</strong><br>
         • <strong>Prezzo comprensivo di installazione chiavi in mano</strong><br>
         • <strong>I prezzi indicati sono IVA inclusa</strong><br>
-        ${percentualeSurplus > 0 ? `• <strong>Include surplus trasferta del ${percentualeSurplus}% per la regione ${regione}</strong><br>` : ''}
         ${isCampoVenditaPDF ? `• <strong>Impianto per vendita energia: il ricavo annuale è calcolato sulla produzione totale venduta alla rete</strong><br>` : ''}
+        ${isCampoVenditaPDF ? `• <strong>Installazione su campo fotovoltaico: 5 m² per ogni kW installato</strong><br>` : ''}
         • Include: moduli, inverter, strutture di montaggio${installazioneCampo === "si" ? ' (struttura per campo con angolazione ottimale)' : ''}, cablaggio, quadri elettrici${numBatterie > 0 && !isCampoVenditaPDF ? ', sistema di accumulo' : ''}<br>
         • Include: progettazione, installazione completa, collaudo, pratiche GSE e connessione alla rete<br>
         ${installazioneCampo === "si" ? '• <strong>Installazione su campo: la struttura sarà progettata con angolazione ottimale per massimizzare la produzione e il ricavo</strong><br>' : ''}
