@@ -16,40 +16,58 @@ body {
     background: #ffffff;
     color: #1a1a1a;
     line-height: 1.6;
-    padding: 40px 20px;
+    padding: 32px 16px;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     touch-action: manipulation;
+    min-height: 100vh;
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 880px;
     margin: 0 auto;
+    padding: 0 16px;
 }
 
 /* Header principale */
 .main-header {
     text-align: center;
-    margin-bottom: 50px;
-    padding-bottom: 30px;
-    border-bottom: 2px solid #f0f0f0;
+    margin-bottom: 40px;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    position: relative;
+    overflow: visible;
+}
+
+.main-header::after {
+    display: none;
 }
 
 .logo-title {
-    font-size: 42px;
-    font-weight: 700;
-    color: #0a5f5f;
+    font-size: 38px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 12px;
-    letter-spacing: -0.5px;
+    letter-spacing: 0px;
+    position: relative;
+    z-index: 1;
 }
 
 .subtitle {
-    font-size: 18px;
-    color: #666;
+    font-size: 14px;
+    color: #475569;
     font-weight: 400;
-    max-width: 700px;
+    max-width: 560px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    line-height: 1.7;
 }
 
 /* Indicatore di progresso */
@@ -58,11 +76,17 @@ body {
     justify-content: center;
     align-items: center;
     margin-bottom: 40px;
-    gap: 15px;
+    gap: 12px;
+    background: #f8fafc;
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(30, 64, 175, 0.08);
+    border: 1px solid #e0f2fe;
 }
 
 .progress-step {
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 10px;
 }
@@ -71,36 +95,73 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #e5e5e5;
-    color: #999;
+    background: #e5e7eb;
+    color: #9ca3af;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
-    font-size: 16px;
-    transition: all 0.3s ease;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    border: 2px solid transparent;
 }
 
 .progress-circle.active {
-    background: #0a5f5f;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
     color: white;
     transform: scale(1.1);
+    box-shadow: 0 3px 16px rgba(30, 64, 175, 0.4);
 }
 
 .progress-circle.completed {
-    background: #0d7a7a;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
     color: white;
 }
 
-.progress-line {
-    width: 60px;
-    height: 3px;
-    background: #e5e5e5;
-    transition: all 0.3s ease;
+.progress-step-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    transition: color 0.3s ease;
 }
 
-.progress-line.completed {
-    background: #0d7a7a;
+.progress-step.active .progress-step-label {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.progress-step.completed .progress-step-label {
+    color: #1e40af;
+}
+
+.progress-line {
+    width: 64px;
+    height: 3px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-line::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+    transition: width 0.4s ease;
+}
+
+.progress-line.completed::before {
+    width: 100%;
 }
 
 /* Sezioni/Pagine */
@@ -130,140 +191,218 @@ body {
 }
 
 .section {
-    padding: 50px 40px;
+    padding: 40px 40px;
     background: #ffffff;
-    border-radius: 16px;
-    border: 1px solid #e5e5e5;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border-radius: 10px;
+    border: 1px solid #e0f2fe;
+    box-shadow: 0 3px 16px rgba(30, 64, 175, 0.08);
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
 }
 
 .section:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 24px rgba(30, 64, 175, 0.12);
+    transform: translateY(-2px);
 }
 
 /* Titoli sezioni */
 h2 {
-    color: #0a5f5f;
-    font-size: 28px;
-    font-weight: 600;
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #f0f0f0;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #e0f2fe;
+    position: relative;
+    letter-spacing: -0.5px;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 64px;
+    height: 2px;
+    background: linear-gradient(90deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
 }
 
 .section-intro {
     text-align: center;
-    font-size: 18px;
-    color: #666;
-    margin-bottom: 40px;
+    font-size: 14px;
+    color: #475569;
+    margin-bottom: 36px;
     line-height: 1.8;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+    border-radius: 6px;
+    border-left: 3px solid #3b82f6;
 }
 
 /* Form */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
-    margin-top: 30px;
+    gap: 22px;
+    margin-top: 28px;
 }
 
 .form-field {
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 label {
     font-weight: 600;
-    color: #333;
+    color: #2d3748;
     margin-bottom: 8px;
-    font-size: 14px;
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 input, select {
-    padding: 14px 16px;
-    border: 2px solid #e5e5e5;
-    border-radius: 8px;
-    font-size: 16px;
+    padding: 13px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 13px;
     font-family: inherit;
-    transition: all 0.3s ease;
-    background: #fafafa;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #fafbfc;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    color: #2d3748;
+    font-weight: 500;
 }
 
 select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%232563eb' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 40px;
+    background-position: right 11px center;
+    padding-right: 36px;
+    cursor: pointer;
 }
 
 input:focus, select:focus {
     outline: none;
-    border-color: #0a5f5f;
+    border-color: #3b82f6;
     background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(10, 95, 95, 0.1);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
 input:hover, select:hover {
-    border-color: #0a5f5f;
+    border-color: #60a5fa;
     background: #ffffff;
 }
 
 /* Help link */
 .help-link {
-    margin-top: 8px;
+    margin-top: 10px;
 }
 
 .help-link span {
     font-size: 13px;
-    color: #0a5f5f;
+    color: #2563eb;
     cursor: pointer;
-    text-decoration: underline;
-    font-weight: 500;
-    transition: color 0.3s ease;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: #eff6ff;
+    border-radius: 6px;
+    border: 1px solid #dbeafe;
 }
 
 .help-link span:hover {
-    color: #0d7a7a;
+    color: #1e40af;
+    background: #dbeafe;
+    transform: translateX(3px);
+}
+
+.help-link span::before {
+    content: '❓';
+    font-size: 12px;
 }
 
 /* Pulsanti */
 button {
-    padding: 16px 32px;
-    background: linear-gradient(135deg, #0a5f5f 0%, #0d7a7a 100%);
+    padding: 18px 36px;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
     color: white;
     border: none;
     border-radius: 8px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 12px rgba(10, 95, 95, 0.2);
+    letter-spacing: 0.8px;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    position: relative;
+    overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+button:hover::before {
+    left: 100%;
 }
 
 button:hover {
+    background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(10, 95, 95, 0.3);
+    box-shadow: 0 6px 25px rgba(37, 99, 235, 0.4);
 }
 
 button:active {
     transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(10, 95, 95, 0.3);
+    box-shadow: 0 2px 12px rgba(37, 99, 235, 0.3);
 }
 
 button:disabled {
-    opacity: 0.5;
+    opacity: 0.6;
     cursor: not-allowed;
     transform: none;
+    box-shadow: 0 2px 12px rgba(37, 99, 235, 0.2);
+}
+
+button:disabled:hover {
+    transform: none;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    box-shadow: 0 2px 12px rgba(37, 99, 235, 0.2);
 }
 
 .btn-full {
@@ -285,13 +424,19 @@ button:disabled {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 30px;
-    gap: 15px;
+    margin-top: 40px;
+    gap: 20px;
+    padding-top: 30px;
+    border-top: 2px solid #f0f0f0;
 }
 
 .btn-nav {
     flex: 1;
-    max-width: 200px;
+    max-width: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .btn-back {
@@ -305,19 +450,30 @@ button:disabled {
 
 /* Risultati */
 .result-container {
-    background: linear-gradient(135deg, #f8fffe 0%, #f0faf9 100%);
-    padding: 35px;
-    margin-top: 30px;
-    border-radius: 12px;
-    border-left: 4px solid #0a5f5f;
+    background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+    padding: 32px;
+    margin-top: 28px;
+    border-radius: 10px;
+    border: 2px solid #bfdbfe;
+    box-shadow: 0 3px 16px rgba(30, 64, 175, 0.1);
 }
 
 .result-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 18px 0;
-    border-bottom: 1px solid #e0e0e0;
+    padding: 16px 0;
+    border-bottom: 2px solid #dbeafe;
+    transition: all 0.3s ease;
+}
+
+.result-row:hover {
+    background: rgba(59, 130, 246, 0.05);
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-left: -12px;
+    margin-right: -12px;
+    border-radius: 6px;
 }
 
 .result-row:last-child {
@@ -326,39 +482,67 @@ button:disabled {
 
 .result-label {
     font-weight: 600;
-    color: #333;
-    font-size: 15px;
+    color: #475569;
+    font-size: 12px;
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.4px;
 }
 
 .result-value {
     font-weight: 700;
-    color: #0a5f5f;
-    font-size: 22px;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 19px;
+    text-align: right;
 }
 
 .result-highlight {
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 8px;
-    margin-top: 20px;
+    background: linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #3b82f6 75%, #60a5fa 100%);
+    padding: 28px;
+    border-radius: 10px;
+    margin-top: 24px;
     text-align: center;
-    border: 2px solid #0a5f5f;
+    box-shadow: 0 6px 24px rgba(30, 64, 175, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.result-highlight::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+    animation: shimmer 4s infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { transform: translate(-25%, -25%) rotate(0deg); }
+    50% { transform: translate(25%, 25%) rotate(180deg); }
 }
 
 .result-highlight .label {
-    font-size: 14px;
-    color: #666;
+    font-size: 11px;
+    color: #e0f2fe;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
 }
 
 .result-highlight .value {
-    font-size: 32px;
-    font-weight: 700;
-    color: #0a5f5f;
+    font-size: 34px;
+    font-weight: 800;
+    color: #ffffff;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Responsive Mobile */
@@ -490,21 +674,55 @@ button:disabled {
 
 @media (max-width: 380px) {
     .logo-title {
-        font-size: 24px;
+        font-size: 26px;
     }
     
     .subtitle {
         font-size: 14px;
     }
     
+    .progress-indicator {
+        padding: 15px 10px;
+    }
+    
     .progress-circle {
-        width: 30px;
-        height: 30px;
-        font-size: 12px;
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+    
+    .progress-step-label {
+        font-size: 9px;
     }
     
     .progress-line {
-        width: 30px;
+        width: 35px;
+    }
+    
+    .section {
+        padding: 25px 15px;
+    }
+    
+    h2 {
+        font-size: 20px;
+    }
+    
+    input, select {
+        padding: 14px 14px;
+        font-size: 15px;
+    }
+    
+    button {
+        padding: 16px 24px;
+        font-size: 14px;
+    }
+    
+    .result-value {
+        font-size: 18px;
+    }
+    
+    .result-highlight .value {
+        font-size: 28px;
     }
 }
 </style>
@@ -521,16 +739,19 @@ button:disabled {
 
 <!-- INDICATORE DI PROGRESSO -->
 <div class="progress-indicator">
-    <div class="progress-step">
+    <div class="progress-step" id="step-1">
         <div class="progress-circle active" id="progress-1">1</div>
+        <div class="progress-step-label">Inizio</div>
     </div>
     <div class="progress-line" id="line-1"></div>
-    <div class="progress-step">
+    <div class="progress-step" id="step-2">
         <div class="progress-circle" id="progress-2">2</div>
+        <div class="progress-step-label">Dati</div>
     </div>
     <div class="progress-line" id="line-2"></div>
-    <div class="progress-step">
+    <div class="progress-step" id="step-3">
         <div class="progress-circle" id="progress-3">3</div>
+        <div class="progress-step-label">Risultati</div>
     </div>
 </div>
 
@@ -548,7 +769,8 @@ button:disabled {
         </div>
         <div class="page-navigation">
             <button class="btn-primary btn-nav btn-next" onclick="goToPage(2)">
-                Inizia il Calcolo →
+                Inizia il Calcolo
+                <span style="font-size: 20px;">→</span>
             </button>
         </div>
     </div>
@@ -669,10 +891,12 @@ button:disabled {
         
         <div class="page-navigation">
             <button class="btn-back btn-nav" onclick="goToPage(1)">
-                ← Indietro
+                <span style="font-size: 20px;">←</span>
+                Indietro
             </button>
             <button class="btn-primary btn-nav btn-next" onclick="validateAndCalculate()">
-                Calcola Impianto →
+                Calcola Impianto
+                <span style="font-size: 20px;">→</span>
             </button>
         </div>
     </div>
@@ -687,10 +911,12 @@ button:disabled {
         </div>
         <div class="page-navigation" style="margin-top: 30px;">
             <button class="btn-back btn-nav" onclick="goToPage(2)">
-                ← Modifica Dati
+                <span style="font-size: 20px;">←</span>
+                Modifica Dati
             </button>
             <button class="btn-primary btn-nav btn-next" onclick="scaricaPreventivo()">
-                Scarica PDF →
+                Scarica PDF
+                <span style="font-size: 20px;">📄</span>
             </button>
         </div>
     </div>
@@ -723,16 +949,23 @@ function updateProgress() {
     for (let i = 1; i <= 3; i++) {
         const circle = document.getElementById('progress-' + i);
         const line = document.getElementById('line-' + i);
+        const step = document.getElementById('step-' + i);
         
         if (i < currentPage) {
             circle.classList.add('completed');
             circle.classList.remove('active');
+            if (step) step.classList.add('completed');
             if (line) line.classList.add('completed');
         } else if (i === currentPage) {
             circle.classList.add('active');
             circle.classList.remove('completed');
+            if (step) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            }
         } else {
             circle.classList.remove('active', 'completed');
+            if (step) step.classList.remove('active', 'completed');
             if (line) line.classList.remove('completed');
         }
     }
