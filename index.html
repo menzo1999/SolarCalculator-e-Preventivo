@@ -545,81 +545,110 @@ button:disabled:hover {
 /* Responsive Mobile */
 @media (max-width: 768px) {
     body {
-        padding: 20px 15px;
+        padding: 15px 10px;
     }
     
     .container {
         max-width: 100%;
+        padding: 0 8px;
     }
     
     .main-header {
-        margin-bottom: 30px;
-        padding-bottom: 20px;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
     }
     
     .logo-title {
-        font-size: 28px;
+        font-size: 26px;
+        line-height: 1.2;
     }
     
     .subtitle {
-        font-size: 15px;
-        padding: 0 10px;
+        font-size: 14px;
+        padding: 0 5px;
+        line-height: 1.5;
     }
     
     .progress-indicator {
-        margin-bottom: 30px;
-        gap: 10px;
+        margin-bottom: 25px;
+        gap: 8px;
+        padding: 18px 12px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
     }
     
     .progress-circle {
-        width: 35px;
-        height: 35px;
-        font-size: 14px;
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
+        flex-shrink: 0;
     }
     
     .progress-line {
-        width: 40px;
+        width: 30px;
+        flex-shrink: 0;
+    }
+    
+    .progress-step-label {
+        font-size: 9px;
+        white-space: nowrap;
     }
     
     .section {
-        padding: 25px 20px;
+        padding: 25px 18px;
         border-radius: 12px;
     }
     
     .section-intro {
-        font-size: 16px;
+        font-size: 15px;
         margin-bottom: 25px;
+        padding: 18px;
     }
     
     h2 {
-        font-size: 22px;
+        font-size: 20px;
         margin-bottom: 20px;
+        padding-bottom: 12px;
     }
     
     .form-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 18px;
     }
     
     .form-field {
         width: 100%;
+        grid-column: span 1 !important;
     }
     
     label {
-        font-size: 13px;
-        margin-bottom: 6px;
+        font-size: 12px;
+        margin-bottom: 8px;
     }
     
     input, select {
         padding: 16px 14px;
         font-size: 16px;
         width: 100%;
+        border-radius: 8px;
+    }
+    
+    select {
+        background-position: right 14px center;
+    }
+    
+    .help-link span {
+        font-size: 14px;
+        padding: 10px 14px;
+        display: block;
+        text-align: center;
     }
     
     button {
-        padding: 18px 28px;
-        font-size: 15px;
+        padding: 16px 24px;
+        font-size: 14px;
         width: 100%;
+        letter-spacing: 0.5px;
     }
     
     .btn-full {
@@ -629,11 +658,14 @@ button:disabled:hover {
     
     .page-navigation {
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
+        margin-top: 30px;
+        padding-top: 25px;
     }
     
     .btn-nav {
         max-width: 100%;
+        width: 100%;
     }
     
     .btn-next {
@@ -641,85 +673,145 @@ button:disabled:hover {
     }
     
     .result-container {
-        padding: 20px 15px;
+        padding: 20px 16px;
         margin-top: 20px;
     }
     
     .result-row {
         flex-direction: column;
         align-items: flex-start;
-        padding: 15px 0;
-        gap: 5px;
+        padding: 14px 0;
+        gap: 6px;
     }
     
     .result-label {
+        font-size: 11px;
+    }
+    
+    .result-value {
+        font-size: 18px;
+        text-align: left;
+    }
+    
+    .result-highlight {
+        padding: 22px 16px;
+        margin-top: 20px;
+    }
+    
+    .result-highlight .label {
+        font-size: 10px;
+        margin-bottom: 8px;
+    }
+    
+    .result-highlight .value {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 12px 8px;
+    }
+    
+    .logo-title {
+        font-size: 24px;
+    }
+    
+    .subtitle {
+        font-size: 13px;
+    }
+    
+    .progress-indicator {
+        padding: 15px 10px;
+        gap: 6px;
+    }
+    
+    .progress-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+    
+    .progress-step-label {
+        font-size: 8px;
+    }
+    
+    .progress-line {
+        width: 25px;
+    }
+    
+    .section {
+        padding: 20px 14px;
+    }
+    
+    .section-intro {
+        font-size: 14px;
+        padding: 15px;
+    }
+    
+    h2 {
+        font-size: 18px;
+    }
+    
+    input, select {
+        padding: 14px 12px;
+        font-size: 16px;
+    }
+    
+    button {
+        padding: 15px 20px;
         font-size: 13px;
     }
     
     .result-value {
-        font-size: 20px;
-    }
-    
-    .result-highlight {
-        padding: 20px 15px;
+        font-size: 16px;
     }
     
     .result-highlight .value {
-        font-size: 28px;
+        font-size: 24px;
     }
 }
 
 @media (max-width: 380px) {
     .logo-title {
-        font-size: 26px;
+        font-size: 22px;
     }
     
     .subtitle {
-        font-size: 14px;
-    }
-    
-    .progress-indicator {
-        padding: 15px 10px;
+        font-size: 12px;
+        line-height: 1.4;
     }
     
     .progress-circle {
-        width: 35px;
-        height: 35px;
-        font-size: 14px;
-    }
-    
-    .progress-step-label {
-        font-size: 9px;
+        width: 30px;
+        height: 30px;
+        font-size: 11px;
     }
     
     .progress-line {
-        width: 35px;
+        width: 20px;
     }
     
     .section {
-        padding: 25px 15px;
+        padding: 18px 12px;
     }
     
     h2 {
-        font-size: 20px;
+        font-size: 17px;
     }
     
     input, select {
-        padding: 14px 14px;
+        padding: 13px 11px;
         font-size: 15px;
     }
     
     button {
-        padding: 16px 24px;
-        font-size: 14px;
-    }
-    
-    .result-value {
-        font-size: 18px;
+        padding: 14px 18px;
+        font-size: 12px;
     }
     
     .result-highlight .value {
-        font-size: 28px;
+        font-size: 22px;
     }
 }
 </style>
